@@ -32,7 +32,26 @@ std::string test_system_prompt  = "The following is an article about roofline mo
 
 std::string prompt = R"(
 The Roofline model is a visual model used to analyze and optimize the performance of 
-computational kernels on various hardware platforms.)";
+computational kernels on various hardware platforms. 
+
+1. Axes and Units
+   - Y-Axis (Attainable GFLOPs/sec): Represents the achievable performance in giga 
+     floating-point operations per second. This is a measure of the computational power that 
+     a kernel can leverage based on the hardware's specifications.
+   - X-Axis (Operational Intensity in FLOPs/Byte): Represents the operational intensity of 
+     a kernel, calculated as the ratio of floating-point operations (FLOPs) to memory operations 
+     (Bytes). Kernels with low operational intensity are memory-bound, while those with high 
+     operational intensity are compute-bound.
+
+Summary:
+The Roofline model provides a structured way to identify where kernels are limited (by either memory 
+or computation) and to pinpoint where optimizations can be most effective. The model's ceilings 
+(e.g., memory bandwidth, ILP, SIMD) offer insights into potential bottlenecks, guiding developers 
+on where to focus their efforts for specific types of kernels. For Kernel 1 (low operational 
+intensity), memory optimizations are more critical, while for Kernel 2 (higher operational 
+intensity), compute-related optimizations like ILP and SIMD usage are likely to yield more 
+significant improvements.
+)";
 
 template <typename T> class thread_safe_queue
 {
@@ -199,10 +218,10 @@ class llama_worker
 
         prompt = tmp_str + "<|start_header_id|>assistant<|end_header_id|>\n\n";
 
-        std::cout << prompt << std::endl;
-
         std::vector<llama_token> prompt_tokens = common_tokenize(ctx_, prompt, false, true);
         const int32_t n_prompt = prompt_tokens.size();
+
+        std::cout << "Prompt tokens size: " << n_prompt << std::endl;
 
         int total_tokens = n_tokens_system_ + n_prompt;
 
