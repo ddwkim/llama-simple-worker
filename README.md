@@ -9,7 +9,7 @@ This may increase the throughput by nearly the number of instances, although som
 
 For CUDA,
 ```
-cmake -B build -DGGML_VULKAN=ON -DLLAMA_BUILD_COMMON=ON -DCMAKE_BUILD_TYPE=DEBUG
+cmake -B build -DGGML_CUDA=ON -DLLAMA_BUILD_COMMON=ON -DCMAKE_BUILD_TYPE=DEBUG
 cmake --build build -j ${num_workers}
 ```
 
